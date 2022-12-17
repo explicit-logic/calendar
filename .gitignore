@@ -1,0 +1,7 @@
+.npmrc
+.idea/*
+/.vscode/
+
+.DS_Store
+coverage
+*.log

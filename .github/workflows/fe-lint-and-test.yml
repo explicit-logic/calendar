@@ -1,0 +1,35 @@
+name: FE - Lint and test
+
+on:
+  push:
+    paths:
+      - 'frontend/src/**'
+
+jobs:
+  build_and_test:
+    defaults:
+      run:
+        working-directory: ./frontend
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nodejs: [16, 18]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      with:
+        cache: npm
+        cache-dependency-path: '**/package-lock.json'
+        node-version: ${{ matrix.nodejs }}
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@maglifter'
+    - run: npm install
+    - run: npm install -D esbuild
+    - run: npm run test
+    - run: npm run lint
+    - run: npm run build-all
